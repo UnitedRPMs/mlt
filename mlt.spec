@@ -1,42 +1,43 @@
-%{!?ruby_sitelib: %global ruby_sitelib %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["sitelibdir"] ')}
-%{!?ruby_sitearch: %global ruby_sitearch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["sitearchdir"] ')}
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
-%global php_extdir  %(php-config --extension-dir 2>/dev/null || echo "undefined")
+%bcond_without ruby
 
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
-Version:        6.0.0
+Version:        6.2.0
 Release:        1%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
-Source:         http://downloads.sourceforge.net/mlt/%{name}-%{version}.tar.gz
+Source0:        https://github.com/mltframework/mlt/archive/v%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires:  frei0r-devel
 BuildRequires:  ffmpeg-devel
 BuildRequires:  opencv-devel
-BuildRequires:  qt4-devel
-BuildRequires:  kdelibs4-devel
+BuildRequires:  qt5-qtsvg-devel
+BuildRequires:  qt5-qt3d-devel
 BuildRequires:  libquicktime-devel
 BuildRequires:  SDL-devel
+BuildRequires:  SDL_image-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  libogg-devel
-BuildRequires:  libdv-devel
-BuildRequires:  libvorbis-devel
+#Deprecated dv, kino, and vorbis modules are not built.
+#https://github.com/mltframework/mlt/commit/9d082192a4d79157e963fd7f491da0f8abab683f
+#BuildRequires:  libdv-devel
+#BuildRequires:  libvorbis-devel
 BuildRequires:  libsamplerate-devel
 BuildRequires:  ladspa-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  sox-devel
 BuildRequires:  swig
 BuildRequires:  python-devel
-BuildRequires:  SDL_image-devel
 BuildRequires:  freetype-devel
 BuildRequires:  libexif-devel
+BuildRequires:  fftw-devel
+BuildRequires:  xine-lib-devel
+BuildRequires:  pulseaudio-libs-devel
 
-%if 0%{?ruby:1}
+%if %{with ruby}
 BuildRequires:  ruby-devel ruby
 %else
 Obsoletes: mlt-ruby < 0.8.8-5
@@ -98,10 +99,9 @@ This module allows to work with MLT using PHP.
 %prep
 %setup -q
 
-chmod 755 src/modules/lumas/create_lumas
+chmod 644 src/modules/qt/kdenlivetitle_wrapper.cpp
 chmod 644 src/modules/kdenlive/filter_freeze.c
 chmod -x demo/demo
-
 
 # Don't overoptimize (breaks debugging)
 sed -i -e '/fomit-frame-pointer/d' configure
@@ -114,34 +114,34 @@ sed -i -e '/ffast-math/d' configure
         --enable-gpl                            \
         --enable-gpl3                            \
         --enable-motion-est                     \
-%ifarch ppc ppc64 
+%ifarch ppc ppc64
         --disable-mmx                           \
         --disable-sse                           \
         --disable-xine                          \
 %endif
-        --qimage-libdir=%{_qt4_libdir}          \
-        --qimage-includedir=%{_qt4_headerdir}   \
         --rename-melt=%{name}-melt              \
-        --avformat-swscale                      \
-        --swig-languages="python php %{?ruby:ruby}"
+        --swig-languages="python php%{?with_ruby: ruby}"
 
 make %{?_smp_mflags}
 
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT install
+make DESTDIR=%{buildroot} install
 
 # manually do what 'make install' skips
-install -D -pm 0644 src/swig/python/mlt.py $RPM_BUILD_ROOT%{python_sitelib}/mlt.py
-%if 0%{?ruby}
-install -D -pm 0755 src/swig/ruby/play.rb $RPM_BUILD_ROOT%{ruby_sitelib}/play.rb
-install -D -pm 0755 src/swig/ruby/thumbs.rb $RPM_BUILD_ROOT%{ruby_sitelib}/thumbs.rb
-install -D -pm 0755 src/swig/ruby/mlt.so $RPM_BUILD_ROOT%{ruby_sitearch}/mlt.so
+install -D -pm 0644 src/swig/python/mlt.py %{buildroot}%{python2_sitelib}/mlt.py
+install -D -pm 0755 src/swig/python/_mlt.so %{buildroot}%{python2_sitearch}/_mlt.so
+
+%if %{with ruby}
+install -D -pm 0755 src/swig/ruby/play.rb %{buildroot}%{ruby_vendorlibdir}/play.rb
+install -D -pm 0755 src/swig/ruby/thumbs.rb %{buildroot}%{ruby_vendorlibdir}/thumbs.rb
+install -D -pm 0755 src/swig/ruby/mlt.so %{buildroot}%{ruby_vendorarchdir}/mlt.so
 %endif
-install -D -pm 0755 src/swig/python/_mlt.so $RPM_BUILD_ROOT%{python_sitearch}/_mlt.so
-install -D -pm 0755 src/swig/php/mlt.so $RPM_BUILD_ROOT%{php_extdir}/mlt.so
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
-cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/mlt.ini << 'EOF'
+
+install -D -pm 0755 src/swig/php/mlt.so %{buildroot}%{php_extdir}/mlt.so
+
+install -d %{buildroot}%{_sysconfdir}/php.d
+cat > %{buildroot}%{_sysconfdir}/php.d/mlt.ini << 'EOF'
 ; Enable mlt extension module
 extension=mlt.so
 EOF
@@ -160,8 +160,8 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING GPL NEWS README*
+%doc AUTHORS ChangeLog NEWS README*
+%license COPYING GPL
 %{_bindir}/mlt-melt
 %{_libdir}/mlt/
 %{_libdir}/libmlt++.so.*
@@ -169,25 +169,21 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 %{_datadir}/mlt/
 
 %files python
-%defattr(-,root,root,-)
 %{python_sitelib}/mlt.py*
 %{python_sitearch}/_mlt.so
 
-%if 0%{?ruby}
+%if %{with ruby}
 %files ruby
-%defattr(-,root,root,-)
-%{ruby_sitelib}/play.rb
-%{ruby_sitelib}/thumbs.rb
-%{ruby_sitearch}/mlt.so
+%{ruby_vendorlibdir}/play.rb
+%{ruby_vendorlibdir}/thumbs.rb
+%{ruby_vendorarchdir}/mlt.so
 %endif
 
 %files php
-%defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/php.d/mlt.ini
 %{php_extdir}/mlt.so
 
 %files devel
-%defattr(-,root,root,-)
 %doc docs/* demo/
 %{_libdir}/pkgconfig/mlt-framework.pc
 %{_libdir}/pkgconfig/mlt++.pc
@@ -198,9 +194,27 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 
 
 %changelog
+* Thu Apr 21 2016 Sérgio Basto <sergio@serjux.com> - 6.2.0-1
+- Update MLT to 6.2.0
 
-* Mon Feb 22 2016 David Vásquez <davidjeremias82 AT gmail DOT com> - 6.0.0-1
-- Updated to 6.0.0
+* Sun Feb 21 2016 Sérgio Basto <sergio@serjux.com> - 6.0.0-2
+- Add license tag. 
+- More spec modernizations and rpmlint fixes.
+- Configure conditional build for Ruby.
+- Remove old BuilRequires that aren't needed anymore. 
+- Remove old config options (avformat-swscale and qimage-libdir) that no longer
+  exist in configure.
+- Fix Ruby build.
+
+* Fri Feb 19 2016 Sérgio Basto <sergio@serjux.com> - 6.0.0-1
+- Update 6.0.0 (This is a bugfix and minor enhancement release. Note that our
+  release versioning scheme has changed. We were approaching 1.0 but decided to
+  synchronize release version with the C library ABI version, which is currently
+  at v6)
+- Switch to qt5 to fix rfbz #3810 and copy some BRs from Debian package.
+
+* Wed Nov 18 2015 Sérgio Basto <sergio@serjux.com> - 0.9.8-1
+- Update MLT to 0.9.8
 
 * Mon May 11 2015 Sérgio Basto <sergio@serjux.com> - 0.9.6-2
 - Workaround #3523
@@ -237,7 +251,7 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 - Enable gplv3 as asked in rfbz #3040
 - Fix a changelog date.
 - Fix Ruby warning with rpmbuild "Use RbConfig instead of obsolete and deprecated Config". 
-- Remove obsolete tag %clean and rm -rf 
+- Remove obsolete tag %%clean and rm -rf 
 
 * Mon Oct 07 2013 Sérgio Basto <sergio@serjux.com> - 0.9.0-1
 - Update to 0.9.0
