@@ -3,7 +3,7 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Version:        6.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -194,6 +194,9 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 
 
 %changelog
+* Wed May 25 2016 Sérgio Basto <sergio@serjux.com> - 6.2.0-2
+- Bump release
+
 * Thu Apr 21 2016 Sérgio Basto <sergio@serjux.com> - 6.2.0-1
 - Update MLT to 6.2.0
 
