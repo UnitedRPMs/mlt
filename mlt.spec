@@ -3,7 +3,7 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Version:        6.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -194,6 +194,9 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 
 
 %changelog
+* Sun Jun 26 2016 The UnitedRPMs Project (Key for UnitedRPMs infrastructure) <unitedrpms@protonmail.com> - 6.2.0-3
+- Rebuild with new ffmpeg
+
 * Wed May 25 2016 Sérgio Basto <sergio@serjux.com> - 6.2.0-2
 - Bump release
 
