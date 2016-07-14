@@ -3,7 +3,7 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Version:        6.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -31,11 +31,15 @@ BuildRequires:  libxml2-devel
 BuildRequires:  sox-devel
 BuildRequires:  swig
 BuildRequires:  python-devel
+BuildRequires:  python-setuptools
 BuildRequires:  freetype-devel
 BuildRequires:  libexif-devel
 BuildRequires:  fftw-devel
 BuildRequires:  xine-lib-devel
 BuildRequires:  pulseaudio-libs-devel
+BuildRequires:	lua-devel
+# BuildRequires:	php-devel
+BuildRequires:	tcl-devel
 
 %if %{with ruby}
 BuildRequires:  ruby-devel ruby
@@ -45,7 +49,7 @@ Obsoletes: mlt-ruby < 0.8.8-5
 
 Requires:  opencv-core
 
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+# global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
 
 
 %description
@@ -71,16 +75,25 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 Summary: Python package to work with MLT
 
 %package ruby
-Requires: ruby(abi) = 1.9.1
+Requires: ruby >= 1.9.1
 Requires: %{name}%{_isa} = %{version}-%{release}
 Summary: Ruby package to work with MLT
 
-%package php
-BuildRequires: php-devel
-Requires: php(zend-abi) = %{php_zend_api}
-Requires: php(api) = %{php_core_api}
-Requires: %{name}%{?_isa} = %{version}-%{release}
-Summary: PHP package to work with MLT
+# package php
+# Requires: php(zend-abi) = %{php_zend_api}
+# Requires: php(api) = %{php_core_api}
+# Requires: %{name}%{?_isa} = %{version}-%{release}
+# Summary: PHP package to work with MLT
+
+%package lua
+Requires: lua
+Requires: %{name}%{_isa} = %{version}-%{release}
+Summary: Lua package to work with MLT
+
+%package tcl
+Requires: tcl
+Requires: %{name}%{_isa} = %{version}-%{release}
+Summary: Tcl package to work with MLT
 
 %description devel
 The %{name}-devel package contains the header files and static libraries for
@@ -92,8 +105,14 @@ This module allows to work with MLT using python.
 %description ruby
 This module allows to work with MLT using ruby.
 
-%description php
-This module allows to work with MLT using PHP. 
+# description php
+# This module allows to work with MLT using PHP. 
+
+%description lua
+This module allows to work with MLT using Lua. 
+
+%description tcl
+This module allows to work with MLT using tcl. 
 
 
 %prep
@@ -107,10 +126,20 @@ chmod -x demo/demo
 sed -i -e '/fomit-frame-pointer/d' configure
 sed -i -e '/ffast-math/d' configure
 
+# respect CFLAGS LDFLAGS when building shared libraries. Bug #308873
+	for x in python lua; do
+		sed -i "/mlt.so/s: -lmlt++ :& ${CFLAGS} ${LDFLAGS} :" src/swig/$x/build || die
+	done
+
+# swig fix
+sed -i "/^LDFLAGS/s: += :& ${LDFLAGS} :" src/swig/ruby/build
+
+
 
 %build
 #export STRIP=/bin/true
 %configure \
+	--avformat-swscale 			\
         --enable-gpl                            \
         --enable-gpl3                            \
         --enable-motion-est                     \
@@ -120,10 +149,14 @@ sed -i -e '/ffast-math/d' configure
         --disable-xine                          \
 %endif
         --rename-melt=%{name}-melt              \
-        --swig-languages="python php%{?with_ruby: ruby}"
+        --swig-languages="lua python ruby tcl"
 
 make %{?_smp_mflags}
 
+
+# pushd src/swig/php
+# ./build
+# popd
 
 %install
 make DESTDIR=%{buildroot} install
@@ -138,15 +171,29 @@ install -D -pm 0755 src/swig/ruby/thumbs.rb %{buildroot}%{ruby_vendorlibdir}/thu
 install -D -pm 0755 src/swig/ruby/mlt.so %{buildroot}%{ruby_vendorarchdir}/mlt.so
 %endif
 
-install -D -pm 0755 src/swig/php/mlt.so %{buildroot}%{php_extdir}/mlt.so
-
-install -d %{buildroot}%{_sysconfdir}/php.d
-cat > %{buildroot}%{_sysconfdir}/php.d/mlt.ini << 'EOF'
-; Enable mlt extension module
-extension=mlt.so
-EOF
+# PHP
+# install -D -pm 0755 src/swig/php/mlt.so %{buildroot}/%{php_extdir}/mlt.so
+# install -d %{buildroot}/%{_sysconfdir}/php.d/
+# cat > %{buildroot}/%{_sysconfdir}/php.d/mlt.ini << 'EOF'
+# ; Enable mlt extension module
+# extension=mlt.so
+# EOF
 
 mv src/modules/motion_est/README README.motion_est
+
+# LUA
+lua_ver=$(lua -v | awk '{print $2}' | cut -c-3)
+pushd src/swig/lua
+install -D -m 0755 mlt.so %{buildroot}/%{_libdir}/lua/$lua_ver/mlt.so
+install -D -m 0644 play.lua %{buildroot}/%{_docdir}/mlt-%{version}/play.lua
+popd
+
+# TCL
+tcl_ver=$(echo 'puts $tcl_version;exit 0' | tclsh)
+pushd src/swig/tcl
+install -D -m 0755 mlt.so %{buildroot}/%{_libdir}/tcl$tcl_ver/mlt.so
+install -D -m 0755 play.tcl %{buildroot}/%{_docdir}/mlt-%{version}/play.tcl
+popd
 
 
 %check
@@ -179,9 +226,17 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 %{ruby_vendorarchdir}/mlt.so
 %endif
 
-%files php
-%config(noreplace) %{_sysconfdir}/php.d/mlt.ini
-%{php_extdir}/mlt.so
+# files php
+# %config(noreplace) %{_sysconfdir}/php.d/mlt.ini
+# {php_extdir}/mlt.so
+
+%files lua
+%{_libdir}/lua/*/mlt.so
+%{_datadir}/doc/mlt-%{version}/play.lua
+
+%files tcl
+%{_libdir}/tcl*/mlt.so
+%{_datadir}/doc/mlt-%{version}/play.tcl
 
 %files devel
 %doc docs/* demo/
@@ -194,6 +249,11 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 
 
 %changelog
+
+* Thu Jun 30 2016 David Vásquez <davidjeremias82 AT gmail DOT com> - 6.2.0-4
+- Enabled lua
+- Enabled tcl
+
 * Sun Jun 26 2016 The UnitedRPMs Project (Key for UnitedRPMs infrastructure) <unitedrpms@protonmail.com> - 6.2.0-3
 - Rebuild with new ffmpeg
 
