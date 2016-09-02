@@ -3,7 +3,7 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Version:        6.2.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -11,7 +11,6 @@ Group:          System Environment/Libraries
 Source0:        https://github.com/mltframework/mlt/archive/v%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires:  frei0r-devel
-BuildRequires:  ffmpeg-devel
 BuildRequires:  opencv-devel
 BuildRequires:  qt5-qtsvg-devel
 BuildRequires:  qt5-qt3d-devel
@@ -38,7 +37,6 @@ BuildRequires:  fftw-devel
 BuildRequires:  xine-lib-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:	lua-devel
-# BuildRequires:	php-devel
 BuildRequires:	tcl-devel
 
 %if %{with ruby}
@@ -48,8 +46,7 @@ Obsoletes: mlt-ruby < 0.8.8-5
 %endif
 
 Requires:  opencv-core
-
-# global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+Recommends:  %{name}-freeworld%{?_isa} = %{version}-%{release}
 
 
 %description
@@ -79,12 +76,6 @@ Requires: ruby >= 1.9.1
 Requires: %{name}%{_isa} = %{version}-%{release}
 Summary: Ruby package to work with MLT
 
-# package php
-# Requires: php(zend-abi) = %{php_zend_api}
-# Requires: php(api) = %{php_core_api}
-# Requires: %{name}%{?_isa} = %{version}-%{release}
-# Summary: PHP package to work with MLT
-
 %package lua
 Requires: lua
 Requires: %{name}%{_isa} = %{version}-%{release}
@@ -94,6 +85,12 @@ Summary: Lua package to work with MLT
 Requires: tcl
 Requires: %{name}%{_isa} = %{version}-%{release}
 Summary: Tcl package to work with MLT
+
+%package freeworld
+BuildRequires: ffmpeg-devel
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Summary: Freeworld support part of MLT.
+
 
 %description devel
 The %{name}-devel package contains the header files and static libraries for
@@ -105,14 +102,14 @@ This module allows to work with MLT using python.
 %description ruby
 This module allows to work with MLT using ruby.
 
-# description php
-# This module allows to work with MLT using PHP. 
-
 %description lua
 This module allows to work with MLT using Lua. 
 
 %description tcl
 This module allows to work with MLT using tcl. 
+
+%description freeworld
+This package give us the freeworld (ffmpeg support) part of MLT.
 
 
 %prep
@@ -154,10 +151,6 @@ sed -i "/^LDFLAGS/s: += :& ${LDFLAGS} :" src/swig/ruby/build
 make %{?_smp_mflags}
 
 
-# pushd src/swig/php
-# ./build
-# popd
-
 %install
 make DESTDIR=%{buildroot} install
 
@@ -170,14 +163,6 @@ install -D -pm 0755 src/swig/ruby/play.rb %{buildroot}%{ruby_vendorlibdir}/play.
 install -D -pm 0755 src/swig/ruby/thumbs.rb %{buildroot}%{ruby_vendorlibdir}/thumbs.rb
 install -D -pm 0755 src/swig/ruby/mlt.so %{buildroot}%{ruby_vendorarchdir}/mlt.so
 %endif
-
-# PHP
-# install -D -pm 0755 src/swig/php/mlt.so %{buildroot}/%{php_extdir}/mlt.so
-# install -d %{buildroot}/%{_sysconfdir}/php.d/
-# cat > %{buildroot}/%{_sysconfdir}/php.d/mlt.ini << 'EOF'
-# ; Enable mlt extension module
-# extension=mlt.so
-# EOF
 
 mv src/modules/motion_est/README README.motion_est
 
@@ -194,6 +179,9 @@ pushd src/swig/tcl
 install -D -m 0755 mlt.so %{buildroot}/%{_libdir}/tcl$tcl_ver/mlt.so
 install -D -m 0755 play.tcl %{buildroot}/%{_docdir}/mlt-%{version}/play.tcl
 popd
+
+# Freeworld
+find %{buildroot} -type f | grep -P "mlt/avformat|libmltavformat.so" | awk -F "%{buildroot}" '{print $2}' | tee %{_builddir}/%{name}-%{version}/freeworld.txt 
 
 
 %check
@@ -226,10 +214,6 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 %{ruby_vendorarchdir}/mlt.so
 %endif
 
-# files php
-# %config(noreplace) %{_sysconfdir}/php.d/mlt.ini
-# {php_extdir}/mlt.so
-
 %files lua
 %{_libdir}/lua/*/mlt.so
 %{_datadir}/doc/mlt-%{version}/play.lua
@@ -247,8 +231,13 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 %{_includedir}/mlt/
 %{_includedir}/mlt++/
 
+%files freeworld -f freeworld.txt
+
 
 %changelog
+
+* Fri Sep 02 2016 David Vásquez <davidjeremias82 AT gmail DOT com> - 6.2.0-5
+- Our MLT provides a separated mlt-freeworld with ffmpeg support. MLT is now provided officially for Fedora without ffmpeg support.
 
 * Thu Jun 30 2016 David Vásquez <davidjeremias82 AT gmail DOT com> - 6.2.0-4
 - Enabled lua
