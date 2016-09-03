@@ -2,6 +2,7 @@
 
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
+Epoch: 		1
 Version:        6.2.0
 Release:        5%{?dist}
 
