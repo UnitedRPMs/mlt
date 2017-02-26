@@ -2,7 +2,7 @@
  
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
  
-Version:        6.2.0
+Version:        6.4.1
  
 License: 	GPLv2+ and LGPLv2+
  

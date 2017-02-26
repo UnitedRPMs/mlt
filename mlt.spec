@@ -3,7 +3,7 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Epoch: 		1
-Version:        6.2.0
+Version:        6.4.1
 Release:        5%{?dist}
 
 License:        GPLv3 and LGPLv2+
@@ -236,6 +236,9 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 
 
 %changelog
+
+* Sat Feb 25 2017 David Vásquez <davidjeremias82 AT gmail DOT com> - 6.4.1-5
+- Updated to 6.4.1-5
 
 * Fri Sep 02 2016 David Vásquez <davidjeremias82 AT gmail DOT com> - 6.2.0-5
 - Our MLT provides a separated mlt-freeworld with ffmpeg support. MLT is now provided officially for Fedora without ffmpeg support.
