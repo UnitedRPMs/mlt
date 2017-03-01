@@ -39,6 +39,7 @@ BuildRequires:  xine-lib-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:	lua-devel
 BuildRequires:	tcl-devel
+Provides:	mlt%{?_isa} = %{version}-%{release}
 
 %if %{with ruby}
 BuildRequires:  ruby-devel ruby
