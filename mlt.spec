@@ -4,12 +4,14 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch: 		1
 Version:        6.4.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
 Source0:        https://github.com/mltframework/mlt/archive/v%{version}/%{name}-%{version}.tar.gz
+# Fix kdenlive crash on exit
+Patch:		a3188e30.patch	
 
 BuildRequires:  frei0r-devel
 BuildRequires:  opencv-devel
@@ -115,7 +117,7 @@ This package give us the freeworld (ffmpeg support) part of MLT.
 
 
 %prep
-%setup -q
+%autosetup -p1
 
 chmod 644 src/modules/qt/kdenlivetitle_wrapper.cpp
 chmod 644 src/modules/kdenlive/filter_freeze.c
@@ -237,6 +239,9 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 
 
 %changelog
+
+* Sat Aug 12 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.4.1-8  
+- Fix kdenlive crash on exit
 
 * Tue Apr 18 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.4.1-7  
 - Automatic Mass Rebuild
