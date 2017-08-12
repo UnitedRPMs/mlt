@@ -135,7 +135,9 @@ sed -i -e '/ffast-math/d' configure
 # swig fix
 sed -i "/^LDFLAGS/s: += :& ${LDFLAGS} :" src/swig/ruby/build
 
-
+# xlocale.h is gone in F26/RAWHIDE
+sed -r -i 's/#include <xlocale.h>/#include <locale.h>/' src/framework/mlt_property.h
+%endif
 
 %build
 #export STRIP=/bin/true
