@@ -4,14 +4,18 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch: 		1
 Version:        6.4.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
 Source0:        https://github.com/mltframework/mlt/archive/v%{version}/%{name}-%{version}.tar.gz
 # Fix kdenlive crash on exit
-Patch:		a3188e30.patch	
+Patch:		a3188e30.patch
+# Fix build with glibc 2.26
+%if 0%{?fedora} >= 27
+Patch1:		mlt-glibc-2.26.patch
+%endif	
 
 BuildRequires:  frei0r-devel
 BuildRequires:  opencv-devel
@@ -242,6 +246,9 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 
 
 %changelog
+
+* Sat Oct 07 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.4.1-9
+- Fix build with glibc 2.26  
 
 * Sat Aug 12 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.4.1-8  
 - Fix kdenlive crash on exit
