@@ -45,6 +45,7 @@ BuildRequires:  xine-lib-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:	lua-devel
 BuildRequires:	tcl-devel
+BuildRequires:	vid.stab-devel
 Provides:	mlt%{?_isa} = %{version}-%{release}
 
 %if %{with ruby}
@@ -248,7 +249,8 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 %changelog
 
 * Sat Oct 07 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.4.1-9
-- Fix build with glibc 2.26  
+- Fix build with glibc 2.26 
+- vid.stab enabled 
 
 * Sat Aug 12 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.4.1-8  
 - Fix kdenlive crash on exit
