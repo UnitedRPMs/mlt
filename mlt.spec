@@ -3,19 +3,13 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Epoch: 		1
-Version:        6.4.1
-Release:        9%{?dist}
+Version:        6.6.0
+Release:        1%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
-Source0:        https://github.com/mltframework/mlt/archive/v%{version}/%{name}-%{version}.tar.gz
-# Fix kdenlive crash on exit
-Patch:		a3188e30.patch
-# Fix build with glibc 2.26
-%if 0%{?fedora} >= 27
-Patch1:		mlt-glibc-2.26.patch
-%endif	
+Source0:        https://github.com/mltframework/mlt/archive/v%{version}/%{name}-%{version}.tar.gz	
 
 BuildRequires:  frei0r-devel
 BuildRequires:  opencv-devel
@@ -46,6 +40,9 @@ BuildRequires:  pulseaudio-libs-devel
 BuildRequires:	lua-devel
 BuildRequires:	tcl-devel
 BuildRequires:	vid.stab-devel
+BuildRequires:	movit-devel
+BuildRequires:	eigen3-devel
+BuildRequires:	libebur128-devel
 Provides:	mlt%{?_isa} = %{version}-%{release}
 
 %if %{with ruby}
@@ -122,7 +119,7 @@ This package give us the freeworld (ffmpeg support) part of MLT.
 
 
 %prep
-%autosetup -p1
+%autosetup 
 
 chmod 644 src/modules/qt/kdenlivetitle_wrapper.cpp
 chmod 644 src/modules/kdenlive/filter_freeze.c
@@ -216,8 +213,8 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 %{_datadir}/mlt/
 
 %files python
-%{python_sitelib}/mlt.py*
-%{python_sitearch}/_mlt.so
+%{python2_sitelib}/mlt.py*
+%{python2_sitearch}/_mlt.so
 
 %if %{with ruby}
 %files ruby
@@ -247,6 +244,9 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 
 
 %changelog
+
+* Wed Jan 24 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.6.0-1
+- Updated to 6.6.0
 
 * Sat Oct 07 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.4.1-9
 - Fix build with glibc 2.26 
