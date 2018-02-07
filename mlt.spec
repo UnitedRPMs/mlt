@@ -4,7 +4,7 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch: 		1
 Version:        6.6.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -244,6 +244,9 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 
 
 %changelog
+
+* Tue Feb 06 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.6.0-2
+- Rebuilt for movit 1.6.0
 
 * Wed Jan 24 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.6.0-1
 - Updated to 6.6.0
