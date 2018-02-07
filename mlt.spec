@@ -30,8 +30,8 @@ BuildRequires:  ladspa-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  sox-devel
 BuildRequires:  swig
-BuildRequires:  python-devel
-BuildRequires:  python-setuptools
+BuildRequires:  python2-devel
+BuildRequires:  python2-setuptools
 BuildRequires:  freetype-devel
 BuildRequires:  libexif-devel
 BuildRequires:  fftw-devel
@@ -73,7 +73,7 @@ Requires:       pkgconfig
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %package python
-Requires: python
+Requires: python2
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Summary: Python package to work with MLT
 
@@ -142,7 +142,14 @@ sed -i "/^LDFLAGS/s: += :& ${LDFLAGS} :" src/swig/ruby/build
 sed -r -i 's/#include <xlocale.h>/#include <locale.h>/' src/framework/mlt_property.h
 %endif
 
+# /usr/bin/python will be removed or switched to Python 3 in the future f28
+find ./ -type f -exec sed -i 's|/usr/bin/env python|/usr/bin/env python2|g' {} \;
+
 %build
+
+# https://fedoraproject.org/wiki/Changes/Avoid_usr_bin_python_in_RPM_Build#Quick_Opt-Out
+export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
+
 #export STRIP=/bin/true
 %configure \
 	--avformat-swscale 			\
@@ -161,6 +168,10 @@ make %{?_smp_mflags}
 
 
 %install
+
+# https://fedoraproject.org/wiki/Changes/Avoid_usr_bin_python_in_RPM_Build#Quick_Opt-Out
+export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
+
 make DESTDIR=%{buildroot} install
 
 # manually do what 'make install' skips
