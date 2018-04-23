@@ -1,15 +1,19 @@
+%global commit0 d7dfb4757cdd8ccd9a260c57e6474c99a9297089
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+%global gver .git%{shortcommit0}
+
 %bcond_without ruby
 
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Epoch: 		1
 Version:        6.6.0
-Release:        3%{?dist}
+Release:        4%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
-Source0:        https://github.com/mltframework/mlt/archive/v%{version}/%{name}-%{version}.tar.gz	
+Source0:        https://github.com/mltframework/mlt/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz	
 
 BuildRequires:  frei0r-devel
 BuildRequires:  opencv-devel
@@ -119,7 +123,7 @@ This package give us the freeworld (ffmpeg support) part of MLT.
 
 
 %prep
-%autosetup 
+%autosetup -n %{name}-%{commit0} 
 
 chmod 644 src/modules/qt/kdenlivetitle_wrapper.cpp
 chmod 644 src/modules/kdenlive/filter_freeze.c
@@ -200,16 +204,6 @@ install -D -m 0755 mlt.so %{buildroot}/%{_libdir}/tcl$tcl_ver/mlt.so
 install -D -m 0755 play.tcl %{buildroot}/%{_docdir}/mlt-%{version}/play.tcl
 popd
 
-# Freeworld
-find %{buildroot} -type f | grep -P "mlt/avformat|libmltavformat.so" | awk -F "%{buildroot}" '{print $2}' | tee %{_builddir}/%{name}-%{version}/freeworld.txt 
-
-
-%check
-# verify pkg-config version sanity
-export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
-test "$(pkg-config --modversion mlt-framework)" = "%{version}"
-test "$(pkg-config --modversion mlt++)" = "%{version}"
-
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -251,10 +245,14 @@ test "$(pkg-config --modversion mlt++)" = "%{version}"
 %{_includedir}/mlt/
 %{_includedir}/mlt++/
 
-%files freeworld -f freeworld.txt
+%files freeworld 
+%{_libdir}/mlt/libmltavformat.so
 
 
 %changelog
+
+* Mon Apr 23 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.6.0-4.gitd7dfb47
+- Updated to current commit stable
 
 * Fri Apr 06 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.6.0-3
 - Rebuilt for opencv
