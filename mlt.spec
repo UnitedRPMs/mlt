@@ -97,7 +97,7 @@ Requires: %{name}%{_isa} = %{version}-%{release}
 Summary: Tcl package to work with MLT
 
 %package freeworld
-BuildRequires: ffmpeg-devel
+BuildRequires: ffmpeg-devel >= 4.0
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Summary: Freeworld support part of MLT.
 
@@ -573,4 +573,3 @@ popd
 - Removed "olib" from path, name, etc.
 - Add changelog
 - Update summary/description
-
