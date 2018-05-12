@@ -1,4 +1,4 @@
-%global commit0 d7dfb4757cdd8ccd9a260c57e6474c99a9297089
+%global commit0 c1ef8ae0d573665ff881083d07e0576ea59a9efc
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -7,8 +7,8 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Epoch: 		1
-Version:        6.6.0
-Release:        4%{?gver}%{?dist}
+Version:        6.8.0
+Release:        1%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -250,6 +250,9 @@ popd
 
 
 %changelog
+
+* Sat May 12 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.8.0-1.gitc1ef8ae
+- Updated to 6.8.0-1.gitc1ef8ae
 
 * Mon Apr 23 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.6.0-4.gitd7dfb47
 - Updated to current commit stable
