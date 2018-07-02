@@ -8,12 +8,13 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch: 		1
 Version:        6.8.0
-Release:        1%{?gver}%{?dist}
+Release:        2%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
-Source0:        https://github.com/mltframework/mlt/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz	
+Source0:        https://github.com/mltframework/mlt/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+Patch:		0049e5d5272feea5c803a174f5bb42d67ab177c1.patch	
 
 BuildRequires:  frei0r-devel
 BuildRequires:  opencv-devel
@@ -123,7 +124,7 @@ This package give us the freeworld (ffmpeg support) part of MLT.
 
 
 %prep
-%autosetup -n %{name}-%{commit0} 
+%autosetup -n %{name}-%{commit0} -p1
 
 chmod 644 src/modules/qt/kdenlivetitle_wrapper.cpp
 chmod 644 src/modules/kdenlive/filter_freeze.c
@@ -250,6 +251,9 @@ popd
 
 
 %changelog
+
+* Sat May 12 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.8.0-2.gitc1ef8ae
+- Compatibility patch
 
 * Sat May 12 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.8.0-1.gitc1ef8ae
 - Updated to 6.8.0-1.gitc1ef8ae
