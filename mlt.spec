@@ -1,4 +1,4 @@
-%global commit0 c1ef8ae0d573665ff881083d07e0576ea59a9efc
+%global commit0 41710728faa7ea8be6483dd97afdf2ce6ff38e76
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -7,7 +7,7 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Epoch: 		1
-Version:        6.8.0
+Version:        6.10.0
 Release:        2%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
@@ -251,6 +251,9 @@ popd
 
 
 %changelog
+
+* Tue Jul 03 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.10.0-2.git4171072
+- Updated to 6.10.0-2.git4171072
 
 * Sat May 12 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.8.0-2.gitc1ef8ae
 - Compatibility patch
