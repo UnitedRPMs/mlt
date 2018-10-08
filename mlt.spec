@@ -8,7 +8,7 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch: 		1
 Version:        6.10.0
-Release:        2%{?gver}%{?dist}
+Release:        4%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -251,6 +251,9 @@ popd
 
 
 %changelog
+
+* Sun Oct 07 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.10.0-4.git4171072
+- Rebuilt for opencv
 
 * Tue Jul 03 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.10.0-2.git4171072
 - Updated to 6.10.0-2.git4171072
