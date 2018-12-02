@@ -14,7 +14,6 @@ License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
 Source0:        https://github.com/mltframework/mlt/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
-Patch:		0049e5d5272feea5c803a174f5bb42d67ab177c1.patch	
 
 BuildRequires:  frei0r-devel
 BuildRequires:  opencv-devel
@@ -124,7 +123,7 @@ This package give us the freeworld (ffmpeg support) part of MLT.
 
 
 %prep
-%autosetup -n %{name}-%{commit0} -p1
+%autosetup -n %{name}-%{commit0} 
 
 chmod 644 src/modules/qt/kdenlivetitle_wrapper.cpp
 chmod 644 src/modules/kdenlive/filter_freeze.c
