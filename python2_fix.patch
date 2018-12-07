@@ -1,0 +1,32 @@
+diff -ruN orig/src/swig/python/build new/src/swig/python/build
+--- orig/src/swig/python/build	2018-11-26 14:20:52.000000000 -0600
++++ new/src/swig/python/build	2018-12-06 19:13:20.226225072 -0600
+@@ -8,14 +8,14 @@
+ 	exit 0
+ fi
+ 
+-path=`which python 2> /dev/null`
++path=`which python2 2> /dev/null`
+ 
+ if [ $? = 0 ]
+ then
+ 	# Change this as needed
+-	export PYTHON_INCLUDE=`python -c "import sys;print \"%s/include/python%d.%d\"%(sys.prefix,sys.version_info[0],sys.version_info[1])"`
++	export PYTHON_INCLUDE=`python2 -c "import sys;print \"%s/include/python%d.%d\"%(sys.prefix,sys.version_info[0],sys.version_info[1])"`
+ 
+-	[ ! -d "$PYTHON_INCLUDE" ] && echo python development missing && exit 1
++	[ ! -d "$PYTHON_INCLUDE" ] && echo python2 development missing && exit 1
+ 
+ 	ln -sf ../mlt.i
+ 
+@@ -26,8 +26,8 @@
+ 	${CXX} -fPIC -D_GNU_SOURCE ${CXXFLAGS} -c -I../.. -I$PYTHON_INCLUDE mlt_wrap.cxx || exit $?
+ 
+ 	# Create the module
+-	${CXX} ${CXXFLAGS} -shared mlt_wrap.o -L../../mlt++ -lmlt++ -L../../framework -lmlt $(python-config --ldflags) -o _mlt.so || exit $?
++	${CXX} ${CXXFLAGS} -shared mlt_wrap.o -L../../mlt++ -lmlt++ -L../../framework -lmlt $(python2-config --ldflags) -o _mlt.so || exit $?
+ else
+-	echo Python not installed.
++	echo Python2 not installed.
+ 	exit 1
+ fi

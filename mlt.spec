@@ -8,12 +8,13 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch: 		1
 Version:        6.12.0
-Release:        1%{?gver}%{?dist}
+Release:        2%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
 Source0:        https://github.com/mltframework/mlt/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+Patch0:		python2_fix.patch
 
 BuildRequires:  frei0r-devel
 BuildRequires:  opencv-devel
@@ -97,7 +98,7 @@ Requires: %{name}%{_isa} = %{version}-%{release}
 Summary: Tcl package to work with MLT
 
 %package freeworld
-BuildRequires: ffmpeg-devel >= 4.0
+BuildRequires: ffmpeg-devel >= 4.1
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Summary: Freeworld support part of MLT.
 
@@ -123,7 +124,7 @@ This package give us the freeworld (ffmpeg support) part of MLT.
 
 
 %prep
-%autosetup -n %{name}-%{commit0} 
+%autosetup -n %{name}-%{commit0} -p1
 
 chmod 644 src/modules/qt/kdenlivetitle_wrapper.cpp
 chmod 644 src/modules/kdenlive/filter_freeze.c
@@ -146,8 +147,10 @@ sed -i "/^LDFLAGS/s: += :& ${LDFLAGS} :" src/swig/ruby/build
 sed -r -i 's/#include <xlocale.h>/#include <locale.h>/' src/framework/mlt_property.h
 %endif
 
-# /usr/bin/python will be removed or switched to Python 3 in the future f28
-find ./ -type f -exec sed -i 's|/usr/bin/env python|/usr/bin/env python2|g' {} \;
+# Change shebang in all relevant files in this directory and all subdirectories
+# See `man find` for how the `-exec command {} +` syntax works
+find -type f -exec sed -iE '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python2}=' {} +
+
 
 %build
 
@@ -250,6 +253,10 @@ popd
 
 
 %changelog
+
+* Thu Dec 06 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.12.0-2.gitf608b96
+- Python2 fix
+- Rebuilt for ffmpeg
 
 * Fri Nov 30 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.12.0-1.gitf608b96
 - Updated to 6.12.0-1.gitf608b96
