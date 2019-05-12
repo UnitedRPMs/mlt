@@ -1,6 +1,6 @@
 diff -ruN orig/src/swig/python/build new/src/swig/python/build
---- orig/src/swig/python/build	2018-11-26 14:20:52.000000000 -0600
-+++ new/src/swig/python/build	2018-12-06 19:13:20.226225072 -0600
+--- orig/src/swig/python/build	2019-05-07 20:27:10.000000000 -0600
++++ new/src/swig/python/build	2019-05-12 00:27:38.900834770 -0600
 @@ -8,14 +8,14 @@
  	exit 0
  fi
@@ -11,8 +11,8 @@ diff -ruN orig/src/swig/python/build new/src/swig/python/build
  if [ $? = 0 ]
  then
  	# Change this as needed
--	export PYTHON_INCLUDE=`python -c "import sys;print \"%s/include/python%d.%d\"%(sys.prefix,sys.version_info[0],sys.version_info[1])"`
-+	export PYTHON_INCLUDE=`python2 -c "import sys;print \"%s/include/python%d.%d\"%(sys.prefix,sys.version_info[0],sys.version_info[1])"`
+-	export PYTHON_INCLUDE=`python -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
++	export PYTHON_INCLUDE=`python2 -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
  
 -	[ ! -d "$PYTHON_INCLUDE" ] && echo python development missing && exit 1
 +	[ ! -d "$PYTHON_INCLUDE" ] && echo python2 development missing && exit 1

@@ -1,4 +1,4 @@
-%global commit0 f608b96d2ae236bfec532d1b354d722b25475f95
+%global commit0 02bc8795adf708be46b36fa8985e160e2ecf6d7b
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -7,7 +7,7 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Epoch: 		1
-Version:        6.12.0
+Version:        6.16.0
 Release:        2%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
@@ -253,6 +253,9 @@ popd
 
 
 %changelog
+
+* Sat May 11 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.16.0-2.git02bc879
+- Updated to 6.16.0
 
 * Thu Dec 06 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.12.0-2.gitf608b96
 - Python2 fix
