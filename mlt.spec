@@ -2,6 +2,9 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
+# Turn off the brp-python-bytecompile automagic
+%global _python_bytecompile_extra 0
+
 %bcond_without ruby
 
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
