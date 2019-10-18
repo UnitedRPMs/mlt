@@ -17,7 +17,7 @@ License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
 Source0:        https://github.com/mltframework/mlt/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
-Patch0:		python2_fix.patch
+Patch:		python3_fix.patch
 
 BuildRequires:  frei0r-devel
 BuildRequires:  opencv-devel
@@ -38,8 +38,8 @@ BuildRequires:  ladspa-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  sox-devel
 BuildRequires:  swig
-BuildRequires:  python2-devel
-BuildRequires:  python2-setuptools
+BuildRequires:  python3-devel
+BuildRequires:	python3-setuptools
 BuildRequires:  freetype-devel
 BuildRequires:  libexif-devel
 BuildRequires:  fftw-devel
@@ -80,9 +80,11 @@ Group:          Development/Libraries
 Requires:       pkgconfig
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%package python
-Requires: python2
+%package -n python3-mlt
+Requires: python3
 Requires: %{name}%{?_isa} = %{version}-%{release}
+Obsoletes: python2-mlt < %{version}-%{release}
+Obsoletes: %{name}-python < %{version}-%{release}
 Summary: Python package to work with MLT
 
 %package ruby
@@ -110,7 +112,7 @@ Summary: Freeworld support part of MLT.
 The %{name}-devel package contains the header files and static libraries for
 building applications which use %{name}.
 
-%description python
+%description -n python3-mlt
 This module allows to work with MLT using python. 
 
 %description ruby
@@ -152,19 +154,18 @@ sed -r -i 's/#include <xlocale.h>/#include <locale.h>/' src/framework/mlt_proper
 
 # Change shebang in all relevant files in this directory and all subdirectories
 # See `man find` for how the `-exec command {} +` syntax works
-find -type f -exec sed -iE '1s=^#! */usr/bin/\(python\|env python\)[23]\?=#!%{__python2}=' {} +
+find src/swig/python -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{__python3}|'
 
+# Fix Python 3 include dir
+sed -e 's|python{}.{}|python{}.{}m|' -i src/swig/python/build
 
 %build
-
-# https://fedoraproject.org/wiki/Changes/Avoid_usr_bin_python_in_RPM_Build#Quick_Opt-Out
-export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
 
 #export STRIP=/bin/true
 %configure \
 	--avformat-swscale 			\
         --enable-gpl                            \
-        --enable-gpl3                            \
+        --enable-gpl3                           \
         --enable-motion-est                     \
 %ifarch ppc ppc64
         --disable-mmx                           \
@@ -185,8 +186,8 @@ export PYTHON_DISALLOW_AMBIGUOUS_VERSION=0
 make DESTDIR=%{buildroot} install
 
 # manually do what 'make install' skips
-install -D -pm 0644 src/swig/python/mlt.py %{buildroot}%{python2_sitelib}/mlt.py
-install -D -pm 0755 src/swig/python/_mlt.so %{buildroot}%{python2_sitearch}/_mlt.so
+install -D -pm 0644 src/swig/python/mlt.py %{buildroot}%{python3_sitelib}/mlt.py
+install -D -pm 0755 src/swig/python/_mlt.so %{buildroot}%{python3_sitearch}/_mlt.so
 
 %if %{with ruby}
 install -D -pm 0755 src/swig/ruby/play.rb %{buildroot}%{ruby_vendorlibdir}/play.rb
@@ -223,9 +224,10 @@ popd
 %{_libdir}/libmlt.so.*
 %{_datadir}/mlt/
 
-%files python
-%{python2_sitelib}/mlt.py*
-%{python2_sitearch}/_mlt.so
+%files -n python3-mlt
+%{python3_sitelib}/mlt.py*
+%{python3_sitearch}/_mlt.so
+%{python3_sitelib}/__pycache__/mlt.*
 
 %if %{with ruby}
 %files ruby
@@ -259,6 +261,7 @@ popd
 
 * Mon Oct 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.16.0-3.git434dbcf
 - Updated to june commit stable
+- Drop python2 package and fix compatibility
 
 * Sat May 11 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.16.0-2.git02bc879
 - Updated to 6.16.0
