@@ -2,8 +2,6 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
-%global debug_package %{nil}
-
 %bcond_without ruby
 
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
