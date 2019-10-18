@@ -157,7 +157,9 @@ sed -r -i 's/#include <xlocale.h>/#include <locale.h>/' src/framework/mlt_proper
 find src/swig/python -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{__python3}|'
 
 # Fix Python 3 include dir
+%if 0%{?fedora} <= 31
 sed -e 's|python{}.{}|python{}.{}m|' -i src/swig/python/build
+%endif
 
 %build
 
