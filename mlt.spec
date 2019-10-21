@@ -2,8 +2,6 @@
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
-# Turn off the brp-python-bytecompile script
-%undefine __brp_python_bytecompile
 
 %bcond_without ruby
 
@@ -11,7 +9,7 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch: 		1
 Version:        6.16.0
-Release:        3%{?gver}%{?dist}
+Release:        5%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -83,9 +81,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %package -n python3-mlt
 Requires: python3
 Requires: %{name}%{?_isa} = %{version}-%{release}
-Obsoletes: python2-mlt < %{version}-%{release}
-Obsoletes: %{name}-python < %{version}-%{release}
-Summary: Python package to work with MLT
+Summary: Python3 package to work with MLT
 
 %package ruby
 Requires: ruby >= 1.9.1
@@ -260,6 +256,10 @@ popd
 
 
 %changelog
+
+* Mon Oct 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.16.0-5.git434dbcf
+- Fix and sync release with python2 package
+- Python3 support enabled
 
 * Mon Oct 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.16.0-3.git434dbcf
 - Updated to june commit stable
