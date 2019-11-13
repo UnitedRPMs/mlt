@@ -1,4 +1,4 @@
-%global commit0 434dbcf62048cc1220c425c2adc77697b4d40ffb
+%global commit0 221ff239b9cbbc0e0b749f24e3f754eb087cb1f9
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 
@@ -7,9 +7,9 @@
 
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
-Epoch: 		1
-Version:        6.16.0
-Release:        5%{?gver}%{?dist}
+Epoch:		1
+Version:        6.18.0
+Release:        1%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -257,9 +257,8 @@ popd
 
 %changelog
 
-* Mon Oct 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.16.0-5.git434dbcf
-- Fix and sync release with python2 package
-- Python3 support enabled
+* Mon Nov 11 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.18.0-1.git221ff23
+- Updated to 6.18.0-2.git221ff23
 
 * Mon Oct 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.16.0-3.git434dbcf
 - Updated to june commit stable
