@@ -253,7 +253,7 @@ popd
 %changelog
 
 * Mon Nov 11 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.18.0-1.git221ff23
-- Updated to 6.18.0-2.git221ff23
+- Updated to 6.18.0-1.git221ff23
 
 * Mon Oct 14 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.16.0-3.git434dbcf
 - Updated to june commit stable
