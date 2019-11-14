@@ -15,7 +15,6 @@ License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
 Group:          System Environment/Libraries
 Source0:        https://github.com/mltframework/mlt/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
-Patch:		python3_fix.patch
 
 BuildRequires:  frei0r-devel
 BuildRequires:  opencv-devel
@@ -152,10 +151,6 @@ sed -r -i 's/#include <xlocale.h>/#include <locale.h>/' src/framework/mlt_proper
 # See `man find` for how the `-exec command {} +` syntax works
 find src/swig/python -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{__python3}|'
 
-# Fix Python 3 include dir
-%if 0%{?fedora} <= 31
-sed -e 's|python{}.{}|python{}.{}m|' -i src/swig/python/build
-%endif
 
 %build
 
