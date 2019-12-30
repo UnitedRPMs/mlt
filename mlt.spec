@@ -9,7 +9,7 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch:		1
 Version:        6.18.0
-Release:        1%{?gver}%{?dist}
+Release:        2%{?gver}%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -17,7 +17,7 @@ Group:          System Environment/Libraries
 Source0:        https://github.com/mltframework/mlt/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
 
 BuildRequires:  frei0r-devel
-BuildRequires:  opencv-devel
+BuildRequires:  opencv-devel >= 4.2.0
 BuildRequires:  qt5-qtsvg-devel
 BuildRequires:  qt5-qt3d-devel
 BuildRequires:  libquicktime-devel
@@ -251,6 +251,9 @@ popd
 
 
 %changelog
+
+* Sun Dec 29 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.18.0-2.git221ff23
+- Rebuilt for opencv
 
 * Mon Nov 11 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.18.0-1.git221ff23
 - Updated to 6.18.0-1.git221ff23
