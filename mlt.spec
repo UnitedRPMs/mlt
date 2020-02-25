@@ -1,15 +1,16 @@
-%global commit0 221ff239b9cbbc0e0b749f24e3f754eb087cb1f9
+%global commit0 af9b08853e4ce88733ec7e358ba6ae7af5c26fad
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
-
+# 
+%define _legacy_common_support 1
 
 %bcond_without ruby
 
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Epoch:		1
-Version:        6.18.0
-Release:        2%{?gver}%{?dist}
+Version:        6.20.0
+Release:        2%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -48,6 +49,7 @@ BuildRequires:	vid.stab-devel
 BuildRequires:	movit-devel
 BuildRequires:	eigen3-devel
 BuildRequires:	libebur128-devel
+BuildRequires:	libatomic
 Provides:	mlt%{?_isa} = %{version}-%{release}
 
 %if %{with ruby}
@@ -251,6 +253,9 @@ popd
 
 
 %changelog
+
+* Sun Feb 23 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.20.0-2
+- Updated to 6.20.0
 
 * Sun Dec 29 2019 Unitedrpms Project <unitedrpms AT protonmail DOT com> 6.18.0-2.git221ff23
 - Rebuilt for opencv
