@@ -10,7 +10,7 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch:		1
 Version:        6.20.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -36,7 +36,11 @@ BuildRequires:  ladspa-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  sox-devel
 BuildRequires:  swig
+%if 0%{?fedora} >= 33
+BuildRequires:  python3.9-devel
+%else
 BuildRequires:  python3-devel
+%endif
 BuildRequires:	python3-setuptools
 BuildRequires:  freetype-devel
 BuildRequires:  libexif-devel
@@ -253,6 +257,9 @@ popd
 
 
 %changelog
+
+* Sun May 31 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.20.0-4
+- Rebuilt for python3.9
 
 * Mon Apr 27 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.20.0-3
 - Rebuilt for opencv
