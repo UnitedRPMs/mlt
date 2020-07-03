@@ -10,7 +10,7 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch:		1
 Version:        6.20.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -104,7 +104,7 @@ Requires: %{name}%{_isa} = %{version}-%{release}
 Summary: Tcl package to work with MLT
 
 %package freeworld
-BuildRequires: ffmpeg-devel >= 4.1
+BuildRequires: ffmpeg-devel >= 4.3
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Summary: Freeworld support part of MLT.
 
@@ -257,6 +257,9 @@ popd
 
 
 %changelog
+
+* Tue Jun 23 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.20.0-5
+- Rebuilt for ffmpeg
 
 * Sun May 31 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.20.0-4
 - Rebuilt for python3.9
