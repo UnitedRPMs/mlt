@@ -1,4 +1,4 @@
-%global commit0 f6e57f2659b1a5a136fa1c9df1b3359bd0b91647
+%global commit0 902c4c2d82514e812b3129a0aa3146a89bb898ec
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .git%{shortcommit0}
 # 
@@ -9,8 +9,8 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Epoch:		1
-Version:        6.22.1
-Release:        8%{?dist}
+Version:        6.24.0
+Release:        7%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -36,11 +36,7 @@ BuildRequires:  ladspa-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  sox-devel
 BuildRequires:  swig
-%if 0%{?fedora} >= 33
-BuildRequires:  python3.9-devel
-%else
 BuildRequires:  python3-devel
-%endif
 BuildRequires:	python3-setuptools
 BuildRequires:  freetype-devel
 BuildRequires:  libexif-devel
@@ -161,7 +157,8 @@ find src/swig/python -name '*.py' | xargs sed -i '1s|^#!/usr/bin/env python|#!%{
 %build
 
 #export STRIP=/bin/true
-%configure \
+./configure --prefix=%{_prefix} 		\
+	--libdir=%{_libdir} 			\
 	--avformat-swscale 			\
         --enable-gpl                            \
         --enable-gpl3                           \
@@ -257,6 +254,9 @@ popd
 
 
 %changelog
+
+* Sun Dec 27 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.24.0-7
+- Updated to 6.24.0
 
 * Thu Nov 05 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.22.1-8
 - Rebuilt for opencv 
