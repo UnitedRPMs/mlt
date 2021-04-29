@@ -9,7 +9,7 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Epoch:		1
-Version:        6.26.0
+Version:        6.26.1
 Release:        7%{?dist}
 
 License:        GPLv3 and LGPLv2+
@@ -254,6 +254,9 @@ popd
 
 
 %changelog
+
+* Tue Apr 27 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.26.1-7
+- Updated to 6.26.1
 
 * Sat Apr 17 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.26.0-7
 - Updated to 6.26.0
