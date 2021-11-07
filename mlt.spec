@@ -10,7 +10,7 @@ Summary:        Toolkit for broadcasters, video editors, media players, transcod
 Name:           mlt
 Epoch:		1
 Version:        6.26.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -50,6 +50,8 @@ BuildRequires:	movit-devel
 BuildRequires:	eigen3-devel
 BuildRequires:	libebur128-devel
 BuildRequires:	libatomic
+BuildRequires:	alsa-lib-devel
+
 Provides:	mlt%{?_isa} = %{version}-%{release}
 
 %if %{with ruby}
@@ -254,6 +256,9 @@ popd
 
 
 %changelog
+
+* Sat Nov 06 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.26.1-8
+- Rebuilt
 
 * Tue Apr 27 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1:6.26.1-7
 - Updated to 6.26.1
