@@ -15,7 +15,7 @@
 Summary:        Toolkit for broadcasters, video editors, media players, transcoders
 Name:           mlt
 Version:        7.6.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 
 License:        GPLv3 and LGPLv2+
 URL:            http://www.mltframework.org/twiki/bin/view/MLT/
@@ -29,8 +29,8 @@ BuildRequires:  cmake
 BuildRequires:  frei0r-devel
 BuildRequires:  rtaudio-devel
 BuildRequires:  pkgconfig(gdk-pixbuf-2.0)
-BuildRequires:  opencv-devel >= 4.5.0
-BuildRequires:  opencv-static >= 4.5.0
+BuildRequires:  opencv-devel >= 4.5.5
+BuildRequires:  opencv-static >= 4.5.5
 BuildRequires:  qt-devel
 BuildRequires:  qt5-qtsvg-devel
 BuildRequires:  qt5-qt3d-devel
@@ -257,6 +257,9 @@ chrpath --delete %{buildroot}/usr/bin/melt-7
 
 
 %changelog
+
+* Wed Jun 01 2022 Unitedrpms Project <unitedrpms AT protonmail DOT com> 7.6.0-7
+- Rebuilt for opencv
 
 * Fri May 20 2022 Unitedrpms Project <unitedrpms AT protonmail DOT com> 7.6.0-6
 - Rebuilt
